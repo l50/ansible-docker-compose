@@ -9,16 +9,15 @@ The control node is Ubuntu and target "hosts" are Amazon Linux, with full init-s
 ### Getting Started
 First install Docker for Mac: https://download.docker.com/mac/stable/Docker.dmg
 
-```bash
-chmod 0600 ./env/ansible*
-docker-compose up -d
-cat env/ssh_host_config >> ~/.ssh/config
-ssh control # do this from the repo root
-```
-
 ### Running the example playbooks:
+From your laptop:
 ```bash
-ansible@control:~$ cd ansible/
+docker exec -it control bash
+```
+In the control container:
+```bash
+root@control:/ # cd /home/ansible/ansible/
+root@control:/ # su ansible
 ansible@control:~/ansible$ ansible-playbook site.yml
 ansible@control:~/ansible$ ansible-playbook playbooks/stack_status.yml`
 open http://localhost:8001 # on your Mac
@@ -47,5 +46,3 @@ docker-compose up -d
 
 #### Final Note:
 Be sure not to copy the private key *env/ansible* anywhere.  It was generated for the purposes of this test stack, not to be uploaded anywhere else.
-
-**ToDo**: Docker-compose is Version 1, could use an update
