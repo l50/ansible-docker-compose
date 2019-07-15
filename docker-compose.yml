@@ -1,33 +1,84 @@
-control:
-  build: ./env
-  dockerfile: Dockerfile-control
-  hostname: control
-  links:
-    - lb
-    - web1
-    - web2
-  ports:
-    - "2200:22"
-  volumes:
-    - ./ansible:/home/ansible/ansible
-lb:
-  build: ./env
-  hostname: lb
-  links:
-    - web1
-    - web2
-  ports:
-    - "2201:22"
-    - "8001:80"
-web1:
-  build: ./env
-  hostname: web1
-  ports:
-    - "2211:22"
-    - "8081:80"
-web2:
-  build: ./env
-  hostname: web2
-  ports:
-    - "2212:22"
-    - "8082:80"
+version: '3'
+services:
+  control:
+    privileged: true
+    build:
+      context: ./env
+      dockerfile: Dockerfile-control
+    container_name: control
+    hostname: control
+    links:
+      - lb
+      - web1
+      - web2
+    volumes:
+      - ./ansible:/home/ansible/ansible
+    networks:
+      ansible-net:
+        ipv4_address: 172.50.0.2
+    extra_hosts:
+      - 'web2:172.50.0.5'
+      - 'web1:172.50.0.4'
+      - 'lb:172.50.0.3'
+
+  lb:
+    privileged: true
+    build:
+      context: ./env
+      dockerfile: Dockerfile
+    container_name: lb
+    hostname: lb
+    links:
+      - web1
+      - web2
+    ports:
+      - "8001:80"
+    networks:
+      ansible-net:
+        ipv4_address: 172.50.0.3
+    extra_hosts:
+      - 'web2:172.50.0.5'
+      - 'web1:172.50.0.4'
+      - 'control:172.50.0.2'
+
+  web1:
+    privileged: true
+    build:
+      context: ./env
+      dockerfile: Dockerfile
+    container_name: web1
+    hostname: web1
+    ports:
+      - "8081:80"
+    networks:
+      ansible-net:
+        ipv4_address: 172.50.0.4
+    extra_hosts:
+      - 'web2:172.50.0.5'
+      - 'lb:172.50.0.3'
+      - 'control:172.50.0.2'
+
+  web2:
+    privileged: true
+    build:
+      context: ./env
+      dockerfile: Dockerfile
+    container_name: web2
+    hostname: web2
+    ports:
+      - "8082:80"
+    networks:
+      ansible-net:
+        ipv4_address: 172.50.0.5
+    extra_hosts:
+      - 'web1:172.50.0.4'
+      - 'lb:172.50.0.3'
+      - 'control:172.50.0.2'
+
+networks:
+  ansible-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.50.0.0/24
