@@ -16,8 +16,8 @@ docker exec -it control bash
 ```
 In the control container:
 ```bash
-root@control:/ # cd /home/ansible/ansible/
-root@control:/ # su ansible
+root@control:/# cd /home/ansible/ansible/
+root@control:/# su ansible
 ansible@control:~/ansible$ ansible-playbook site.yml
 ansible@control:~/ansible$ ansible-playbook playbooks/stack_status.yml`
 open http://localhost:8001 # on your Mac
