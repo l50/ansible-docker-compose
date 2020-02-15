@@ -14,12 +14,12 @@ services:
     volumes:
       - ./ansible:/home/ansible/ansible
     networks:
-      ansible-net:
-        ipv4_address: 172.50.0.2
+      ex-ansible-net:
+        ipv4_address: 172.66.0.2
     extra_hosts:
-      - 'web2:172.50.0.5'
-      - 'web1:172.50.0.4'
-      - 'lb:172.50.0.3'
+      - 'web2:172.66.0.5'
+      - 'web1:172.66.0.4'
+      - 'lb:172.66.0.3'
 
   lb:
     privileged: true
@@ -34,12 +34,12 @@ services:
     ports:
       - "8001:80"
     networks:
-      ansible-net:
-        ipv4_address: 172.50.0.3
+      ex-ansible-net:
+        ipv4_address: 172.66.0.3
     extra_hosts:
-      - 'web2:172.50.0.5'
-      - 'web1:172.50.0.4'
-      - 'control:172.50.0.2'
+      - 'web2:172.66.0.5'
+      - 'web1:172.66.0.4'
+      - 'control:172.66.0.2'
 
   web1:
     privileged: true
@@ -51,12 +51,12 @@ services:
     ports:
       - "8081:80"
     networks:
-      ansible-net:
-        ipv4_address: 172.50.0.4
+      ex-ansible-net:
+        ipv4_address: 172.66.0.4
     extra_hosts:
-      - 'web2:172.50.0.5'
-      - 'lb:172.50.0.3'
-      - 'control:172.50.0.2'
+      - 'web2:172.66.0.5'
+      - 'lb:172.66.0.3'
+      - 'control:172.66.0.2'
 
   web2:
     privileged: true
@@ -68,17 +68,17 @@ services:
     ports:
       - "8082:80"
     networks:
-      ansible-net:
-        ipv4_address: 172.50.0.5
+      ex-ansible-net:
+        ipv4_address: 172.66.0.5
     extra_hosts:
-      - 'web1:172.50.0.4'
-      - 'lb:172.50.0.3'
-      - 'control:172.50.0.2'
+      - 'web1:172.66.0.4'
+      - 'lb:172.66.0.3'
+      - 'control:172.66.0.2'
 
 networks:
-  ansible-net:
+  ex-ansible-net:
     driver: bridge
     ipam:
       driver: default
       config:
-        - subnet: 172.50.0.0/24
+        - subnet: 172.66.0.0/24

@@ -40,8 +40,7 @@ An example is included.
 ### How to re-build Docker images:
 ```bash
 docker-compose down
-docker-compose build
-docker-compose up -d
+docker-compose up -d --force-recreate --build
 ```
 
 #### Final Note:
